@@ -18,6 +18,7 @@ mod:RegisterEnglishLocale({
     ["Head Engineer Orvulgh"] = "Head Engineer Orvulgh",
     ["Chief Engineer Wilbargh"] = "Chief Engineer Wilbargh",
     ["Air Current"] = "Air Current", --Tornado units?
+	["Electroshock"] = "Electroshock",
     -- Datachron messages.
     -- Cast.
     -- Bar and messages.
@@ -31,6 +32,7 @@ mod:RegisterDefaultSetting("PillarWarningSound")
 ----------------------------------------------------------------------------------------------------
 local DEBUFF__ELECTROSHOCK_VULNERABILITY = 83798 --2nd shock -> death
 local DEBUFF__OIL_SLICK = 84072 --Sliding platform debuff
+local DEBUFF__ATOMIC_ATTRACTION = 266155 -- plasma ball
 
 ----------------------------------------------------------------------------------------------------
 -- Locals.
@@ -38,6 +40,8 @@ local DEBUFF__OIL_SLICK = 84072 --Sliding platform debuff
 local bWave1Spawned
 
 local tPillars
+local tOrvulgh
+local tWillbargh
 
 ------------
 -- Raw event handlers
@@ -128,14 +132,8 @@ function mod:OnHealthChanged(nId, nPercent, sName)
     end
 end
 
-function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
-    if nSpellId == 266155 then
-		mod:AddMsg("PlasmaBall", "Blasma Ball on you!", 2, "Beware")
-	end
-end
-
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
-    if sCastName == self.L["Electroshock"] then
+    if sCastName == self.L["Electroshock"] and self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tOrvulgh) < 60 then
 		mod:AddTimerBar("Electroshock", "Electroshock", 20 , true, { sColor = "blue" })
 	end
 end
@@ -146,9 +144,11 @@ function mod:OnUnitCreated(nId, tUnit, sName)
     if sName == self.L["Head Engineer Orvulgh"] then
         core:AddUnit(tUnit)
         core:WatchUnit(tUnit)
+		tOrvulgh = tUnit
     elseif sName == self.L["Chief Engineer Wilbargh"] then
         core:AddUnit(tUnit)
         core:WatchUnit(tUnit)
+		tWillbargh = tUnit
     elseif sName == self.L["Air Current"] then --Track these moving?
         core:AddPixie(nId, 2, tUnit, nil, "Yellow", 5, 15, 0)
         
@@ -178,6 +178,11 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
     --local tUnit = GameLib.GetUnitById(nId)
     --local player = GameLib.GetPlayerUnit()
     
+	if nSpellId == DEBUFF__ATOMIC_ATTRACTION then
+		mod:AddMsg("PlasmaBall", "Blasma Ball on you!", 5, "RunAway")
+		-- core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
+	end
+	
     if DEBUFF__ELECTROSHOCK_VULNERABILITY == nSpellId then
         --if tUnit == player then
             --mod:AddMsg("ORBTARGET", self.L["ORB ON YOU!"], 5, "RunAway")
