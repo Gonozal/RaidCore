@@ -1,0 +1,16 @@
+lightweight tag 36b1b3dc3b2a46a6cb21cddc5d9705ec4d6b22e8 5.23
+Author:	Imm├⌐ sama <immemor@users.noreply.github.com>
+Date:	Wed Nov 25 00:01:52 2015 +0100
+
+commit 36b1b3dc3b2a46a6cb21cddc5d9705ec4d6b22e8
+Author: Imm├⌐ sama <immemor@users.noreply.github.com>
+Date:   Wed Nov 25 00:01:52 2015 +0100
+
+    Update version string
+
+commit 40b3a911e457ae93c9700bb05f61db6b075df0b4
+Author: Imm├⌐ sama <immemor@users.noreply.github.com>
+Date:   Tue Nov 24 20:36:47 2015 +0100
+
+    Encounters/GA: Fix lua error about ohmna lines
+

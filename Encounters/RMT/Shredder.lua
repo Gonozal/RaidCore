@@ -4,7 +4,7 @@
 -- Copyright (C) 2016 Joshua Shaffer
 ----------------------------------------------------------------------------------------------------
 local core = Apollo.GetPackage("Gemini:Addon-1.1").tPackage:GetAddon("RaidCore")
-local mod = core:NewEncounter("Shredder", 104, 548, 550)
+local mod = core:NewEncounter("Shredder", 104, 548, 549)
 local Log = Apollo.GetPackage("Log-1.0").tPackage
 if not mod then return end
 

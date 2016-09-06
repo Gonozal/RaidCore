@@ -128,12 +128,16 @@ function mod:OnHealthChanged(nId, nPercent, sName)
     end
 end
 
+function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
+    if nSpellId == 266155 then
+		mod:AddMsg("PlasmaBall", "Blasma Ball on you!", 2, "Beware")
+	end
+end
+
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
-    --if self.L["Robomination"] == sName then
-    --    if self.L["Noxious Belch"] == sCastName then
-    --        mod:AddMsg("BELCH", "Noxious Belch", 5, "Beware")
-    --    end
-    --end
+    if sCastName == self.L["Electroshock"] then
+		mod:AddTimerBar("Electroshock", "Electroshock", 20 , true, { sColor = "blue" })
+	end
 end
 
 function mod:OnUnitCreated(nId, tUnit, sName)
