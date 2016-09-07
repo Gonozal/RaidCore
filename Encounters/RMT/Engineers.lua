@@ -186,9 +186,9 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 
 	if nSpellId == DEBUFF__ATOMIC_ATTRACTION then
 		if nId == tPlayerUnit:GetId() then
-			mod:AddMsg("PlasmaBall", "Blasma Ball on you!", 5, "RunAway")
+			mod:AddMsg("PlasmaBall", "Plasma Ball on you!", 5, "RunAway")
 		else
-			mod:AddMsg("PlasmaBallElse", "Blasma Ball on someone else!", 5)
+			mod:AddMsg("PlasmaBallElse", "Plasma Ball on someone else!", 5)
 		end
 		-- core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
 	end
