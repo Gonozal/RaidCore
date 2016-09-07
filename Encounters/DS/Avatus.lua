@@ -770,7 +770,7 @@ function mod:OnDatachron(sMessage)
     local nEscalatingFound = sMessage:match(self.L["Escalating defense matrix system"])
     if sMessage:find(self.L["Gun Grid Activated"]) then
         mod:AddMsg("GGRIDMSG", "GUN GRID NOW!", 5, mod:GetSetting("SoundGunGrid") and "Beware")
-        mod:AddTimerBar("GGRID", "Next gun grid", GUN_INTERVAL[nMainPhaseCount], mod:GetSetting("SoundGunGrid"))
+        mod:AddTimerBar("GGRID", "Next gun grid", GUN_INTERVAL[nMainPhaseCount])
         if bIsHoloHand then
             mod:AddTimerBar("HOLO", "Next holo: Hands", 22)
             bDisplayHandsPictures = true
