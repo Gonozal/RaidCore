@@ -33,7 +33,7 @@ mod:RegisterDefaultSetting("PillarWarningSound")
 ----------------------------------------------------------------------------------------------------
 local DEBUFF__ELECTROSHOCK_VULNERABILITY = 83798 --2nd shock -> death
 local DEBUFF__OIL_SLICK = 84072 --Sliding platform debuff
-local DEBUFF__ATOMIC_ATTRACTION = 266155 -- plasma ball
+local DEBUFF__ATOMIC_ATTRACTION = 84053 -- plasma ball
 
 ----------------------------------------------------------------------------------------------------
 -- Locals.
@@ -193,7 +193,11 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 		-- core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
 	end
 	
-    if DEBUFF__ELECTROSHOCK_VULNERABILITY == nSpellId then
+
+	
+    if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
+		mod:AddTimerBar("ElectroshockReturn", "ElectroshockReturn", 55 , true, { sColor = "red" })
+
         --if tUnit == player then
             --mod:AddMsg("ORBTARGET", self.L["ORB ON YOU!"], 5, "RunAway")
             --core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
