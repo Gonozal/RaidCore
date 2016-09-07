@@ -19,6 +19,7 @@ mod:RegisterEnglishLocale({
     ["Chief Engineer Wilbargh"] = "Chief Engineer Wilbargh",
     ["Air Current"] = "Air Current", --Tornado units?
 	["Electroshock"] = "Electroshock",
+	["Discharged Plasma"] = "Discharged Plasma",
     -- Datachron messages.
     -- Cast.
     -- Bar and messages.
@@ -166,6 +167,10 @@ function mod:OnUnitCreated(nId, tUnit, sName)
         -- core:AddUnit(tUnit)
         -- core:WatchUnit(tUnit)
     end
+	
+	if sName == self.L["Discharged Plasma"] then 
+		mod:AddTimerBar("ENGIDP", "Next Plasma Ball", 23, mod:GetSetting("SoundWave"))
+	end
 end
 
 function mod:OnUnitDestroyed(nId, tUnit, sName)
