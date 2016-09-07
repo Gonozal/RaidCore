@@ -195,8 +195,8 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 	
 
 	
-    if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
-		mod:AddTimerBar("ElectroshockReturn", "ElectroshockReturn", 55 , true, { sColor = "red" })
+    if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY and nId == tPlayerUnit:GetId() then
+		mod:AddTimerBar("ElectroshockReturn", "Electroshock Return", 55 , true, { sColor = "red" })
 
         --if tUnit == player then
             --mod:AddMsg("ORBTARGET", self.L["ORB ON YOU!"], 5, "RunAway")
