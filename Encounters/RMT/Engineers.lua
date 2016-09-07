@@ -182,9 +182,14 @@ end
 function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
     --local tUnit = GameLib.GetUnitById(nId)
     --local player = GameLib.GetPlayerUnit()
-    
+	local tPlayerUnit = GetPlayerUnit()
+
 	if nSpellId == DEBUFF__ATOMIC_ATTRACTION then
-		mod:AddMsg("PlasmaBall", "Blasma Ball on you!", 5, "RunAway")
+		if nId == tPlayerUnit:GetId() then
+			mod:AddMsg("PlasmaBall", "Blasma Ball on you!", 5, "RunAway")
+		else
+			mod:AddMsg("PlasmaBallElse", "Blasma Ball on someone else!", 5)
+		end
 		-- core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
 	end
 	
