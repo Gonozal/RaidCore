@@ -169,7 +169,7 @@ function mod:OnUnitCreated(nId, tUnit, sName)
     end
 	
 	if sName == self.L["Discharged Plasma"] and self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tUnit) < 60 then 
-		mod:AddTimerBar("ENGIDP", "Next Plasma Ball", 23, mod:GetSetting("SoundWave"))
+		mod:AddTimerBar("ENGIDP", "Next Plasma Ball", 23)
 	end
 end
 
