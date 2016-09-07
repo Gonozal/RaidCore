@@ -182,7 +182,7 @@ end
 function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
     --local tUnit = GameLib.GetUnitById(nId)
     --local player = GameLib.GetPlayerUnit()
-	local tPlayerUnit = GetPlayerUnit()
+	local tPlayerUnit = GameLib.GetPlayerUnit()
 
 	if nSpellId == DEBUFF__ATOMIC_ATTRACTION then
 		if nId == tPlayerUnit:GetId() then
