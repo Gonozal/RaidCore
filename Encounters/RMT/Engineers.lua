@@ -26,6 +26,9 @@ mod:RegisterEnglishLocale({
     ["%s pillar at N%!"] = "%s pillar at 85%!"
 })
 
+local lastPillarHealth = 29
+local disablePillarWarning = false
+
 mod:RegisterDefaultSetting("PillarWarningSound")
 
 ----------------------------------------------------------------------------------------------------
@@ -117,6 +120,10 @@ function mod:OnUnitCreatedRaw(tUnit)
 end
 
 function mod:OnHealthChanged(nId, nPercent, sName)
+	local tUnit = GameLib.GetUnitById(nId)
+	local distanceToPlayer = self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tUnit)
+ 
+
     if sName == self.L["Fusion Core"] or
         sName == self.L["Cooling Turbine"] or
         sName == self.L["Spark Plug"] or
@@ -130,7 +137,20 @@ function mod:OnHealthChanged(nId, nPercent, sName)
                 tPillars[sName].warning = false
                 core:RemoveLineBetweenUnits(nId)
             end
+			
+			if distanceToPlayer < 35 
+				if nPercent < lastPillarHealth and nPercent < 15 and not disablePillarWarning then
+					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Info")
+					disablePillarWarning = true
+				elseif nPercent > 16 then
+					disablePillarWarning = false
+				end
+				
+				lastPillarHealth = nPercent
+			end
     end
+	
+	
 end
 
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
@@ -187,6 +207,7 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 	if nSpellId == DEBUFF__ATOMIC_ATTRACTION then
 		if nId == tPlayerUnit:GetId() then
 			mod:AddMsg("PlasmaBall", "Plasma Ball on you!", 5, "RunAway")
+			mod:AddTimerBar("PlasmaBallExpired", "Run into Plasmaball in...", 15 , "Inferno", { sColor = "red" })			
 		else
 			mod:AddMsg("PlasmaBallElse", "Plasma Ball on someone else!", 5)
 		end
@@ -196,7 +217,8 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 
 	
     if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY and nId == tPlayerUnit:GetId() then
-		mod:AddTimerBar("ElectroshockReturn", "Electroshock Return", 55 , true, { sColor = "red" })
+		mod:AddTimerBar("ElectroshockReturn", "Electroshock Return", 55 , "RunAway", { sColor = "red" })
+		mod:AddTimerBar("ElectroshockLeave", "Electroshock LEAVE", 10 , "RunAway", { sColor = "red" })
 
         --if tUnit == player then
             --mod:AddMsg("ORBTARGET", self.L["ORB ON YOU!"], 5, "RunAway")
