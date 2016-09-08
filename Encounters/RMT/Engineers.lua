@@ -138,7 +138,7 @@ function mod:OnHealthChanged(nId, nPercent, sName)
                 core:RemoveLineBetweenUnits(nId)
             end
 			
-			if distanceToPlayer < 35 
+			if distanceToPlayer < 35 then
 				if nPercent < lastPillarHealth and nPercent < 15 and not disablePillarWarning then
 					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Info")
 					disablePillarWarning = true
