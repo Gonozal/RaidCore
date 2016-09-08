@@ -142,7 +142,7 @@ function mod:OnHealthChanged(nId, nPercent, sName)
 				if nPercent < lastPillarHealth and nPercent < 20 and not disablePillarWarning then
 					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Beware")
 					disablePillarWarning = true
-				elseif nPercent >= 20 then
+				elseif nPercent >= 20.5 then
 					disablePillarWarning = false
 				end
 				
@@ -199,32 +199,44 @@ function mod:OnUnitDestroyed(nId, tUnit, sName)
     --end
 end
 
+function  mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
+	if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
+		core:AddPicture(nId, nId, "Crosshair", 30)
+	end
+end
+
+
 function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
     --local tUnit = GameLib.GetUnitById(nId)
     --local player = GameLib.GetPlayerUnit()
 	local tPlayerUnit = GameLib.GetPlayerUnit()
-
+	local tTargetUnit = GameLib.GetUnitById(nId)
+	
+	
 	if nSpellId == DEBUFF__ATOMIC_ATTRACTION then
 		if nId == tPlayerUnit:GetId() then
 			mod:AddMsg("PlasmaBall", "Plasma Ball on you!", 5, "RunAway")
 			mod:AddTimerBar("PlasmaBallExpired", "Run into Plasmaball in...", 15 , "Inferno", { sColor = "red" })			
 		else
-			mod:AddMsg("PlasmaBallElse", "Plasma Ball on someone else!", 5)
+			mod:AddMsg("PlasmaBallElse", "Plasma Ball on" + GameLib.GetUnitById(nId):GetName(), 5)
 		end
 		-- core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
 	end
 	
 
 	
-    if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY and nId == tPlayerUnit:GetId() then
-		mod:AddTimerBar("ElectroshockReturn", "Electroshock Return", 55 , "RunAway", { sColor = "red" })
-		mod:AddTimerBar("ElectroshockLeave", "Electroshock LEAVE", 10 , "RunAway", { sColor = "red" })
+    if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
+		if nId == tPlayerUnit:GetId() then
+			mod:AddTimerBar("ElectroshockReturn", "Electroshock Return", 55 , "RunAway", { sColor = "red" })
+			mod:AddTimerBar("ElectroshockLeave", "Electroshock LEAVE", 10 , "RunAway", { sColor = "red" })
 
-        --if tUnit == player then
-            --mod:AddMsg("ORBTARGET", self.L["ORB ON YOU!"], 5, "RunAway")
-            --core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
-            --local chatMessage = tUnit:GetName() .. " got shocked debuff"
-            --ChatSystemLib.Command("/p " .. chatMessage)
-        --end
-    end
+			--if tUnit == player then
+				--mod:AddMsg("ORBTARGET", self.L["ORB ON YOU!"], 5, "RunAway")
+				--core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
+				--local chatMessage = tUnit:GetName() .. " got shocked debuff"
+				--ChatSystemLib.Command("/p " .. chatMessage)
+			--end
+		end
+		core:AddPicture(nId, nId, "Crosshair", 30)
+	end
 end
