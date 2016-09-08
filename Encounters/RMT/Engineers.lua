@@ -140,9 +140,9 @@ function mod:OnHealthChanged(nId, nPercent, sName)
 			
 			if distanceToPlayer < 55 then
 				if nPercent < lastPillarHealth and nPercent < 20 and not disablePillarWarning then
-					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Inferno")
+					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Beware")
 					disablePillarWarning = true
-				elseif nPercent >= 20 then
+				elseif nPercent >= 20 thenw
 					disablePillarWarning = false
 				end
 				
