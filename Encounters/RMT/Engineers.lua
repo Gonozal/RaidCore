@@ -102,8 +102,6 @@ function mod:OnBossEnable()
             Log:Add("ERROR", "Combat started but no Lubricant Nozzle")
             mod:AddMsg("ERROR", "Missing pillars!", 10, "Alarm")
         end
-		
-		
     end
 end
 
@@ -117,7 +115,7 @@ function mod:OnUnitCreatedRaw(tUnit)
             sName == self.L["Spark Plug"] or
             sName == self.L["Lubricant Nozzle"] then
                 tPillars[sName] = {id = tUnit:GetId()}
-		end
+        end
     end
 end
 
