@@ -142,7 +142,7 @@ function mod:OnHealthChanged(nId, nPercent, sName)
 				if nPercent < lastPillarHealth and nPercent < 20 and not disablePillarWarning then
 					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Beware")
 					disablePillarWarning = true
-				elseif nPercent >= 20 thenw
+				elseif nPercent >= 20 then
 					disablePillarWarning = false
 				end
 				
