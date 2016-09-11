@@ -199,7 +199,7 @@ function mod:OnUnitDestroyed(nId, tUnit, sName)
     --end
 end
 
-function  mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
+function  mod:Onmove(nId, nSpellId, nStack, fTimeRemaining)
 	if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
 		core:AddPicture(nId, nId, "Crosshair", 30)
 	end
@@ -218,7 +218,7 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 			mod:AddMsg("PlasmaBall", "Plasma Ball on you!", 5, "RunAway")
 			mod:AddTimerBar("PlasmaBallExpired", "Run into Plasmaball in...", 15 , "Inferno", { sColor = "red" })			
 		else
-			mod:AddMsg("PlasmaBallElse", "Plasma Ball on" + GameLib.GetUnitById(nId):GetName(), 5)
+			mod:AddMsg("PlasmaBallElse", "Plasma Ball on " + GameLib.GetUnitById(nId):GetName(), 5)
 		end
 		-- core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
 	end
