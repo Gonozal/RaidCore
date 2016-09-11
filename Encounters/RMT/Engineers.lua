@@ -199,7 +199,7 @@ function mod:OnUnitDestroyed(nId, tUnit, sName)
     --end
 end
 
-function  mod:Onmove(nId, nSpellId, nStack, fTimeRemaining)
+function mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
 	if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
 		core:AddPicture(nId, nId, "Crosshair", 30)
 	end
