@@ -237,6 +237,6 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 				--ChatSystemLib.Command("/p " .. chatMessage)
 			--end
 		end
-		core:AddPicture(nId, nId, "Crosshair", 30)
+		core:RemovePicture(nId)
 	end
 end
