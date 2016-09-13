@@ -28,6 +28,9 @@ mod:RegisterEnglishLocale({
 
 local lastPillarHealth = 29
 local disablePillarWarning = false
+local electroshockTimer = nil 
+local electroshockCounter = 0
+local electroshockAngleCounter = 0
 
 mod:RegisterDefaultSetting("PillarWarningSound")
 
@@ -156,7 +159,37 @@ end
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if sCastName == self.L["Electroshock"] and self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tOrvulgh) < 60 then
 		mod:AddTimerBar("Electroshock", "Electroshock", 20 , true, { sColor = "blue" })
+		electroshockTimer = ApolloTimer.Create(0.05, true, "electroshockTimer", mod)
+
 	end
+end
+
+-- dirty electrocute tracking hack... any better ideas?
+function mod:electroshockTimer()
+	local tPlayerUnit = GameLib.GetPlayerUnit()
+	local dx = tOrvulgh:GetPosition().x - tPlayerUnit:GetPosition().x
+	local dz = tOrvulgh:GetPosition().z - tPlayerUnit:GetPosition().z
+	local bossHeading = tOrvulgh:GetHeading()
+	local heading = 0
+	if dx > 0 then
+		heading = math.acos(dz / math.sqrt(dx^2 + dz^2))
+	else
+		heading = math.acos(dz / math.sqrt(dx^2 + dz^2))
+	end
+	if math.abs(heading - bossHeading) < 0.15 or math.abs(heading + bossHeading) < 0.15 then
+		electroshockAngleCounter = electroshockAngleCounter + 1
+	end
+	electroshockCounter = electroshockCounter + 1
+	
+	if electroshockCounter == 3 then
+		if electroshockAngleCounter == 3 then
+			mod:AddMsg("eleonyou", "ELECTROCUTE ON YOU", 5, "Beware")
+		end
+		electroshockCounter = 0
+		electroshockAngleCounter = 0
+		electroshockTimer:Stop()
+		electroshockTimer = nil
+	end	
 end
 
 function mod:OnUnitCreated(nId, tUnit, sName)
