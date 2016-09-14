@@ -148,7 +148,9 @@ function mod:OnHealthChanged(nId, nPercent, sName)
 				elseif nPercent >= 20.5 then
 					disablePillarWarning = false
 				end
-				
+				if nPercent < lastPillarHealth and nPercent < 13 then
+					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Info")
+				end
 				lastPillarHealth = nPercent
 			end
     end
@@ -159,37 +161,27 @@ end
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if sCastName == self.L["Electroshock"] and self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tOrvulgh) < 60 then
 		mod:AddTimerBar("Electroshock", "Electroshock", 20 , true, { sColor = "blue" })
-		electroshockTimer = ApolloTimer.Create(0.05, true, "electroshockTimer", mod)
-
+		electroshockTimer = ApolloTimer.Create(17, true, "electroshockTimer", mod)
+		
+		for i = 1, 20, 1 do
+			tPartyUnit = GroupLib.GetUnitForGroupMember(i)
+			core:AddLineBetweenUnits("player" .. tostring(i), tPartyUnit, tOrvulgh, "xkcdBrightPurple")
+		end
 	end
 end
 
 -- dirty electrocute tracking hack... any better ideas?
 function mod:electroshockTimer()
-	local tPlayerUnit = GameLib.GetPlayerUnit()
+	local tPartyUnit
 	local dx = tOrvulgh:GetPosition().x - tPlayerUnit:GetPosition().x
 	local dz = tOrvulgh:GetPosition().z - tPlayerUnit:GetPosition().z
-	local bossHeading = tOrvulgh:GetHeading()
-	local heading = 0
-	if dx > 0 then
-		heading = math.acos(dz / math.sqrt(dx^2 + dz^2))
-	else
-		heading = math.acos(dz / math.sqrt(dx^2 + dz^2))
+	for i = 1, 20, 1 do
+		tPartyUnit = GroupLib.GetUnitForGroupMember(i)
+		--if self:GetDistanceBetweenUnits(tPartUnit, tOrvulgh) < 90 then
+			core:AddLineBetweenUnits("player" .. tostring(i), tPartyUnit, tOrvulgh, "xkcdBrightPurple")
+		--end
 	end
-	if math.abs(heading - bossHeading) < 0.15 or math.abs(heading + bossHeading) < 0.15 then
-		electroshockAngleCounter = electroshockAngleCounter + 1
-	end
-	electroshockCounter = electroshockCounter + 1
-	
-	if electroshockCounter == 3 then
-		if electroshockAngleCounter == 3 then
-			mod:AddMsg("eleonyou", "ELECTROCUTE ON YOU", 5, "Beware")
-		end
-		electroshockCounter = 0
-		electroshockAngleCounter = 0
-		electroshockTimer:Stop()
-		electroshockTimer = nil
-	end	
+	electroshockTimer = nil
 end
 
 function mod:OnUnitCreated(nId, tUnit, sName)
@@ -234,7 +226,7 @@ end
 
 function mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
 	if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
-		core:AddPicture(nId, nId, "Crosshair", 30)
+		core:RemovePicture(nId)
 	end
 end
 
@@ -251,7 +243,7 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 			mod:AddMsg("PlasmaBall", "Plasma Ball on you!", 5, "RunAway")
 			mod:AddTimerBar("PlasmaBallExpired", "Run into Plasmaball in...", 15 , "Inferno", { sColor = "red" })			
 		else
-			mod:AddMsg("PlasmaBallElse", "Plasma Ball on " + GameLib.GetUnitById(nId):GetName(), 5)
+			mod:AddMsg("PlasmaBallElse", "Plasma Ball on " .. GameLib.GetUnitById(nId):GetName(), 5)
 		end
 		-- core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
 	end
@@ -262,14 +254,13 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 		if nId == tPlayerUnit:GetId() then
 			mod:AddTimerBar("ElectroshockReturn", "Electroshock Return", 55 , "RunAway", { sColor = "red" })
 			mod:AddTimerBar("ElectroshockLeave", "Electroshock LEAVE", 10 , "RunAway", { sColor = "red" })
-
-			--if tUnit == player then
-				--mod:AddMsg("ORBTARGET", self.L["ORB ON YOU!"], 5, "RunAway")
-				--core:AddLineBetweenUnits("ORB", player:GetId(), nOrbId, 2, "red")
-				--local chatMessage = tUnit:GetName() .. " got shocked debuff"
-				--ChatSystemLib.Command("/p " .. chatMessage)
-			--end
 		end
-		core:RemovePicture(nId)
+		local tPartyUnit
+		for i = 1, 20, 1 do
+			tPartyUnit = GroupLib.GetUnitForGroupMember(i)
+			core:RemoveLineBetweenUnits("player" .. tostring(i))
+		end
+		core:AddPicture(nId, nId, "Crosshair", 30)
+
 	end
 end
