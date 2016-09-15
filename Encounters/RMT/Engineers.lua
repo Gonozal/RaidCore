@@ -166,6 +166,18 @@ function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
 	end
 end
 
+function mod:onCastEnd(nId, sCastName, isInterrupted, sName)
+    if sCastName == self.L["Electroshock"] then
+		mod:removeElectroshockLines()
+	end
+end
+
+function mod:OnNPCSay(sMessage)
+	if sCastName == "Time fer a change o' scenery!" then
+		mod:removeElectroshockLines()
+	end
+end
+
 -- dirty electrocute tracking hack... any better ideas?
 function mod:electroshockLines()
 	local tPartyUnit
@@ -176,7 +188,18 @@ function mod:electroshockLines()
 			core:AddLineBetweenUnits("player" .. tostring(i), tPartyUnit:GetId(), tOrvulgh:GetId())
 		end
 	end
-	electroshockTimer:Stop()
+	--electroshockTimer:Stop()
+	electroshockTimer = nil
+end
+
+function mod:removeElectroshockLines()
+	local tPartyUnit
+	for i = 1, 20, 1 do
+		tPartyUnit = GroupLib.GetUnitForGroupMember(i)
+		core:RemoveLineBetweenUnits("player" .. tostring(i))
+	end
+	
+	--electroshockTimer:Stop()
 	electroshockTimer = nil
 end
 
@@ -256,11 +279,7 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 			mod:AddTimerBar("ElectroshockReturn", "Electroshock Return", 55 , "RunAway", { sColor = "red" })
 			mod:AddTimerBar("ElectroshockLeave", "Electroshock LEAVE", 10 , "RunAway", { sColor = "red" })
 		end
-		local tPartyUnit
-		for i = 1, 20, 1 do
-			tPartyUnit = GroupLib.GetUnitForGroupMember(i)
-			core:RemoveLineBetweenUnits("player" .. tostring(i))
-		end
+		mod:removeElectroshockLines()
 		core:AddPicture(nId, nId, "Crosshair", 30)
 
 	end
