@@ -161,26 +161,22 @@ end
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if sCastName == self.L["Electroshock"] and self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tOrvulgh) < 60 then
 		mod:AddTimerBar("Electroshock", "Electroshock", 20 , true, { sColor = "blue" })
-		electroshockTimer = ApolloTimer.Create(17, true, "electroshockTimer", mod)
-		
-		for i = 1, 20, 1 do
-			tPartyUnit = GroupLib.GetUnitForGroupMember(i)
-			core:AddLineBetweenUnits("player" .. tostring(i), tPartyUnit, tOrvulgh, "xkcdBrightPurple")
-		end
+		Print("Electroshock Warning in 17s")
+		electroshockTimer = ApolloTimer.Create(17, true, "electroshockLines", mod)
 	end
 end
 
 -- dirty electrocute tracking hack... any better ideas?
-function mod:electroshockTimer()
+function mod:electroshockLines()
 	local tPartyUnit
-	local dx = tOrvulgh:GetPosition().x - tPlayerUnit:GetPosition().x
-	local dz = tOrvulgh:GetPosition().z - tPlayerUnit:GetPosition().z
 	for i = 1, 20, 1 do
 		tPartyUnit = GroupLib.GetUnitForGroupMember(i)
-		--if self:GetDistanceBetweenUnits(tPartUnit, tOrvulgh) < 90 then
-			core:AddLineBetweenUnits("player" .. tostring(i), tPartyUnit, tOrvulgh, "xkcdBrightPurple")
-		--end
+		if self:GetDistanceBetweenUnits(tOrvulgh, tPartyUnit) < 60 then
+			--Print(i)
+			core:AddLineBetweenUnits("player" .. tostring(i), tPartyUnit:GetId(), tOrvulgh:GetId())
+		end
 	end
+	electroshockTimer:Stop()
 	electroshockTimer = nil
 end
 
@@ -227,6 +223,11 @@ end
 function mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
 	if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
 		core:RemovePicture(nId)
+	elseif nSpellId == 262406 and nId == nLubricantNozzleId and self:getDistanceBetweenUnits(tLubricantNozzleUnit, tOrvulgh) < 70 then
+		electroshockTimer:Stop()
+		electroshockTimer = nil
+		Print("Electroshock Warning in 2s")
+		electroshockTimer = ApolloTimer.Create(2, true, "electroshockLines", mod)
 	end
 end
 
