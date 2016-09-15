@@ -191,6 +191,8 @@ function mod:OnUnitCreated(nId, tUnit, sName)
         core:AddUnit(tUnit)
         core:WatchUnit(tUnit)
 		tWillbargh = tUnit
+        core:AddPixie(nId .. "_1", 2, tUnit, nil, "Green", 20, 20, 45)
+        core:AddPixie(nId .. "_2", 2, tUnit, nil, "Green", 20, 20, 315)
     elseif sName == self.L["Air Current"] then --Track these moving?
         core:AddPixie(nId, 2, tUnit, nil, "Yellow", 5, 15, 0)
         
