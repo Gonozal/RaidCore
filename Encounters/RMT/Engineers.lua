@@ -142,6 +142,7 @@ function mod:OnHealthChanged(nId, nPercent, sName)
             end
 			
 			if distanceToPlayer < 55 then
+				core:SetWorldMarker(sName .. "hptext", nPercent, GameLib.GetUnitById(nId):GetPosition())
 				if nPercent < lastPillarHealth and nPercent < 20 and not disablePillarWarning then
 					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Beware")
 					disablePillarWarning = true
@@ -175,6 +176,10 @@ end
 function mod:OnNPCSay(sMessage)
 	if sCastName == "Time fer a change o' scenery!" then
 		mod:removeElectroshockLines()
+		if electroshockTimer then
+			electroshockTimer:Stop()
+		end
+		electroshockTimer = nil
 	end
 end
 
@@ -198,9 +203,6 @@ function mod:removeElectroshockLines()
 		tPartyUnit = GroupLib.GetUnitForGroupMember(i)
 		core:RemoveLineBetweenUnits("player" .. tostring(i))
 	end
-	
-	--electroshockTimer:Stop()
-	electroshockTimer = nil
 end
 
 function mod:OnUnitCreated(nId, tUnit, sName)
