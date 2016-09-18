@@ -212,6 +212,7 @@ function mod:OnUnitCreated(nId, tUnit, sName)
         core:AddUnit(tUnit)
         core:WatchUnit(tUnit)
 		tOrvulgh = tUnit
+		core:AddPixie(nId .. "_1", 2, tUnit, nil, "Green", 20, 20, 0)
     elseif sName == self.L["Chief Engineer Wilbargh"] then
         core:AddUnit(tUnit)
         core:WatchUnit(tUnit)
