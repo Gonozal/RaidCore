@@ -106,6 +106,9 @@ function mod:OnBossEnable()
             mod:AddMsg("ERROR", "Missing pillars!", 10, "Alarm")
         end
     end
+	
+	electroshockTimer = ApolloTimer.Create(10, true, "electroshockLines", mod)
+
 end
 
 function mod:OnUnitCreatedRaw(tUnit)
