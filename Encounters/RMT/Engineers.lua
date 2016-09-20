@@ -158,8 +158,14 @@ function mod:OnHealthChanged(nId, nPercent, sName)
 				lastPillarHealth = nPercent
 			end
     end
-	
-	
+end
+
+function mod:OnBossDisable()
+	mod:removeElectroshockLines()
+	if electroshockTimer then
+		electroshockTimer:Stop()
+	end
+	electroshockTimer = nil
 end
 
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
@@ -177,7 +183,7 @@ function mod:onCastEnd(nId, sCastName, isInterrupted, sName)
 end
 
 function mod:OnNPCSay(sMessage)
-	if sCastName == "Time fer a change o' scenery!" then
+	if sMessage == "Time fer a change o' scenery!" then
 		mod:removeElectroshockLines()
 		if electroshockTimer then
 			electroshockTimer:Stop()
@@ -254,14 +260,16 @@ end
 function mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
 	if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
 		core:RemovePicture(nId)
-	elseif nSpellId == 262406 and nId == nLubricantNozzleId and self:getDistanceBetweenUnits(tLubricantNozzleUnit, tOrvulgh) < 70 then
+	end
+end
+
+	if nSpellId == 262406 and (nId == nLubricantNozzleId or nId == nCollingTurbineId) and self:getDistanceBetweenUnits(tLubricantNozzleUnit, tOrvulgh) < 90 then
 		electroshockTimer:Stop()
 		electroshockTimer = nil
 		Print("Electroshock Warning in 2s")
 		electroshockTimer = ApolloTimer.Create(2, true, "electroshockLines", mod)
 	end
 end
-
 
 function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
     --local tUnit = GameLib.GetUnitById(nId)
