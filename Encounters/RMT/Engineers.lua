@@ -263,6 +263,7 @@ function mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
 	end
 end
 
+function mod:OnBuffRemove(nId, nSpellId, nStack, fTimeRemaining)
 	if nSpellId == 262406 and (nId == nLubricantNozzleId or nId == nCollingTurbineId) and self:getDistanceBetweenUnits(tLubricantNozzleUnit, tOrvulgh) < 90 then
 		electroshockTimer:Stop()
 		electroshockTimer = nil
