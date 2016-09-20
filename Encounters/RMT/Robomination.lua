@@ -60,6 +60,8 @@ local bMidPhase1Warning, bMidPhase2Warning
 
 local bInMidPhase
 
+local tCannonArms = {}
+
 ----------------------------------------------------------------------------------------------------
 -- Encounter description.
 ----------------------------------------------------------------------------------------------------
@@ -67,6 +69,8 @@ function mod:OnBossEnable()
     bMidPhase1Warning = false
     bMidPhase2Warning = false
     bInMidPhase = false
+	tCannonArms = nil
+	tCannonArms = {}
 	mod:AddTimerBar("ARMS", "Next arms", 45, nil)
 end
 
@@ -149,7 +153,35 @@ function mod:OnUnitCreated(nId, unit, sName)
         core:AddUnit(unit)
         core:WatchUnit(unit)
         if mod:GetSetting("LinesCannonArms") then
-            core:AddLineBetweenUnits(nId, player:GetId(), nId, 5, "red")
+			if not bInMidPhase or not bMidPhase2Warning then
+				core:AddLineBetweenUnits(nId, player:GetId(), nId, 5, "red")
+			else		
+				if not tCannonArms[nId] then
+					tCannonArms[nId] = unit
+				end
+				local count = 0
+				for _ in pairs(tCannonArms) do count = count + 1 end
+				if count == 2 then
+					local higher = nil
+					local lower = nil
+					for k,v in pairs(tCannonArms) do
+						if higher == nil and lower == nil then
+							higher = k
+							lower = k
+						else
+							local pos1 = tCannonArms[higher]:GetPosition()
+							local pos2 = tCannonArms[k]:GetPosition()
+							if pos1.x + pos1.z > pos2.x + pos2.z then
+								lower = k
+							else
+								higher = k
+							end
+						end			
+					end
+					core:AddLineBetweenUnits(higher, player:GetId(), higher, 5, "red")
+					core:AddLineBetweenUnits(lower, player:GetId(), lower, 5, "green")
+				end				
+			end
         end
         if not bInMidPhase then
             mod:AddTimerBar("ARMS", "Next arms", 45, nil)
@@ -175,6 +207,9 @@ function mod:OnUnitDestroyed(nId, unit, sName)
         mod:AddTimerBar("ARMS", "Next arms", 6, nil)
     elseif sName == self.L["Cannon Arm"] then
         core:RemoveLineBetweenUnits(nId)
+		if tCannonArms[nId] then
+			tCannonArms[nId] = nil
+		end
     elseif sName == self.L["Flailing Arm"] then
         core:RemoveLineBetweenUnits(nId)
     end
