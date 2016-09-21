@@ -171,7 +171,8 @@ function mod:OnUnitCreated(nId, unit, sName)
 						else
 							local pos1 = tCannonArms[higher]:GetPosition()
 							local pos2 = tCannonArms[k]:GetPosition()
-							if pos1.x + pos1.z > pos2.x + pos2.z then
+							--if pos1.x + pos1.z > pos2.x + pos2.z then
+							if (pos1.x + 10000) / (pos1.z + 20000) > (pos2.x + 10000) / (pos2.z + 20000) then
 								lower = k
 							else
 								higher = k
