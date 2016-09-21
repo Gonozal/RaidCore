@@ -135,6 +135,7 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
             end
         end
     elseif DEBUFF__KINETIC_LINK == nSpellId then
+		Print("Kinetic Link on ".. tUnit:GetName())
         if tUnit == player then
             mod:AddMsg("SHOOTORB", self.L["Shoot the orb!"], 5, mod:GetSetting("OrbWarningSounds") and "Destruction")
             if mod:GetSetting("OrbLines") then

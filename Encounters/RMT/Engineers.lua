@@ -230,20 +230,6 @@ function mod:OnUnitCreated(nId, tUnit, sName)
         core:AddPixie(nId .. "_2", 2, tUnit, nil, "Green", 20, 20, 315)
     elseif sName == self.L["Air Current"] then --Track these moving?
         core:AddPixie(nId, 2, tUnit, nil, "Yellow", 5, 15, 0)
-        
-     --These don't fire enter combat or created, but need to figure out how to track their HP
-    -- elseif sName == self.L["Fusion Core"] then
-        -- core:AddUnit(tUnit)
-        -- core:WatchUnit(tUnit)
-    -- elseif sName == self.L["Cooling Turbine"] then
-        -- core:AddUnit(tUnit)
-        -- core:WatchUnit(tUnit)
-    -- elseif sName == self.L["Spark Plug"] then
-        -- core:AddUnit(tUnit)
-        -- core:WatchUnit(tUnit)
-    -- elseif sName == self.L["Lubricant Nozzle"] then
-        -- core:AddUnit(tUnit)
-        -- core:WatchUnit(tUnit)
     end
 	
 	if sName == self.L["Discharged Plasma"] and self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tUnit) < 60 then 
@@ -264,7 +250,7 @@ function mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
 end
 
 function mod:OnBuffRemove(nId, nSpellId, nStack, fTimeRemaining)
-	if nSpellId == 262406 and (nId == nLubricantNozzleId or nId == nCollingTurbineId) and self:getDistanceBetweenUnits(tLubricantNozzleUnit, tOrvulgh) < 90 then
+	if nSpellId == 83987 and (nId == nLubricantNozzleId or nId == nCollingTurbineId) then
 		electroshockTimer:Stop()
 		electroshockTimer = nil
 		Print("Electroshock Warning in 2s")
