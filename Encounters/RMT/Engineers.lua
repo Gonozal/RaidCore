@@ -189,6 +189,8 @@ function mod:OnNPCSay(sMessage)
 			electroshockTimer:Stop()
 		end
 		electroshockTimer = nil
+
+		electroshockTimer = ApolloTimer.Create(5, true, "electroshockLines", mod)
 	end
 end
 
@@ -246,15 +248,6 @@ end
 function mod:OnDebuffRemove(nId, nSpellId, nStack, fTimeRemaining)
 	if nSpellId == DEBUFF__ELECTROSHOCK_VULNERABILITY then
 		core:RemovePicture(nId)
-	end
-end
-
-function mod:OnBuffRemove(nId, nSpellId, nStack, fTimeRemaining)
-	if nSpellId == 83987 and (nId == nLubricantNozzleId or nId == nCollingTurbineId) then
-		electroshockTimer:Stop()
-		electroshockTimer = nil
-		Print("Electroshock Warning in 2s")
-		electroshockTimer = ApolloTimer.Create(2, true, "electroshockLines", mod)
 	end
 end
 
