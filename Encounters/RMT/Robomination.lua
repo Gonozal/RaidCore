@@ -17,7 +17,7 @@ mod:RegisterEnglishLocale({
     ["Trash Compactor"] = "Trash Compactor", --What are these? live 5.5 seconds
     -- Datachron messages.
     ["Robomination Tries to crush %s"] = "Robomination Tries to crush",
-    ["The Robomination sinks down into the trash"] = "The Robomination sinks down into the trash",
+    ["The Robomination sinks down into the trash."] = "The Robomination sinks down into the trash.",
     ["The Robomination erupts back into the fight!"] = "The Robomination erupts back into the fight!",
     ["The Robomination tries to incinerate %s"] = "The Robomination tries to incinerate",
     -- Cast.
@@ -81,6 +81,7 @@ function mod:OnHealthChanged(nId, nPercent, sName)
             mod:AddMsg("MIDPHASEWARNING", self.L["Midphase soon!"], 5, mod:GetSetting("MidphaseWarningSound") and "Algalon")
         elseif nPercent >= 50 and nPercent <= 57 and not bMidPhase2Warning then
             bMidPhase2Warning = true
+			--Print("bMidPhase2Warning")
             mod:AddMsg("MIDPHASEWARNING", self.L["Midphase soon!"], 5, mod:GetSetting("MidphaseWarningSound") and "Algalon")
         end
     end
@@ -131,12 +132,14 @@ function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
 end
 
 function mod:OnDatachron(sMessage)
-    if sMessage == self.L["The Robomination sinks down into the trash"] then
+    if sMessage == self.L["The Robomination sinks down into the trash."] then
         bInMidPhase = true
+		--Print("bInMidPhase")
         mod:AddMsg("MIDPHASE", "Get to center!", 5, "Info")
         mod:RemoveTimerBar("ARMS")
     elseif sMessage == self.L["The Robomination erupts back into the fight!"] then
         bInMidPhase = false
+		--Print("not bInMidPhase")
         mod:AddTimerBar("ARMS", "Next arms", 45, nil)
     elseif sMessage:find(self.L["The Robomination tries to incinerate %s"]) then
         mod:AddMsg("INCINERATION", "Incineration!", 5, mod:GetSetting("IncinerationWarningSound") and "Inferno")
