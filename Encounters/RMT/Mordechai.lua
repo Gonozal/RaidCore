@@ -46,7 +46,7 @@ local DEBUFF__DECOMPRESSION = 75340 -- ?
 local DEBUFF__ENDORPHIN_RUSH = 35023 -- ?
 local DEBUFF__SHATTER_SHOCK = 86755 --Star stun?
 local DEBUFF__SHOCKING_ATTRACTION = 86861 -- Shuriken-Link
-local DEBUFF__MOO = 86861 -- Shuriken-Link
+local DEBUFF__MOO = 275391 -- MoO
 
 
 ----------------------------------------------------------------------------------------------------
