@@ -367,7 +367,9 @@ function SimpleLine:UpdateDraw(tDraw)
             local tVectorA = tFacingVector * (tDraw.nOffset)
             local tVectorB = tFacingVector * (tDraw.nLength + tDraw.nOffset)
             tVectorA = Rotation(tVectorA, tDraw.RotationMatrix)
-            tVectorB = Rotation(tVectorB, tDraw.RotationMatrix)
+            --tVectorB = Rotation(tVectorB, tDraw.RotationMatrix)
+			tVectorB = Rotation(tVectorB, tDraw.ORotationMatrix or tDraw.RotationMatrix)
+
             tVectorFrom = tOriginVector + tVectorA
             tVectorTo = tOriginVector + tVectorB
         end
@@ -405,7 +407,7 @@ function SimpleLine:AddDraw(Key, Origin, nOffset, nLength, nRotation, nWidth, sC
     -- Preprocessing.
     
 	if nOffsetRotation then
-		local nRad = math.rad((nRotation or 0) + nOffsetRotation)
+		local nRad = math.rad(nOffsetRotation)
 		local nCos = math.cos(nRad)
 		local nSin = math.sin(nRad)
 		tDraw.ORotationMatrix = {
@@ -413,16 +415,15 @@ function SimpleLine:AddDraw(Key, Origin, nOffset, nLength, nRotation, nWidth, sC
 			y = NewVector3({ 0, 1, 0 }),
 			z = NewVector3({ nSin, 0, nCos }),
 		}
-	else
-		local nRad = math.rad(nRotation or 0)
-		local nCos = math.cos(nRad)
-		local nSin = math.sin(nRad)
-		tDraw.RotationMatrix = {
-			x = NewVector3({ nCos, 0, -nSin }),
-			y = NewVector3({ 0, 1, 0 }),
-			z = NewVector3({ nSin, 0, nCos }),
-		}
 	end
+	local nRad = math.rad(nRotation or 0)
+	local nCos = math.cos(nRad)
+	local nSin = math.sin(nRad)
+	tDraw.RotationMatrix = {
+		x = NewVector3({ nCos, 0, -nSin }),
+		y = NewVector3({ 0, 1, 0 }),
+		z = NewVector3({ nSin, 0, nCos }),
+	}
 	
     if OriginType == "number" then
         -- Origin is the Id of an unit.
@@ -435,6 +436,7 @@ function SimpleLine:AddDraw(Key, Origin, nOffset, nLength, nRotation, nWidth, sC
         local tFacingVector = NewVector3(DEFAULT_NORTH_FACING)
         local tVectorA = tFacingVector * (tDraw.nOffset)
         local tVectorB = tFacingVector * (tDraw.nLength + tDraw.nOffset)
+		
         tVectorA = Rotation(tVectorA, tDraw.RotationMatrix)
         tVectorB = Rotation(tVectorB, tDraw.RotationMatrix)
         tDraw.nOriginId = nil

@@ -46,6 +46,7 @@ local DEBUFF__DECOMPRESSION = 75340 -- ?
 local DEBUFF__ENDORPHIN_RUSH = 35023 -- ?
 local DEBUFF__SHATTER_SHOCK = 86755 --Star stun?
 local DEBUFF__SHOCKING_ATTRACTION = 86861 -- Shuriken-Link
+local DEBUFF__MOO = 86861 -- Shuriken-Link
 
 
 ----------------------------------------------------------------------------------------------------
@@ -53,7 +54,7 @@ local DEBUFF__SHOCKING_ATTRACTION = 86861 -- Shuriken-Link
 ----------------------------------------------------------------------------------------------------
 local bWave1Spawned, bWave2Spawned, bWave3Spawned, bMiniSpawned
 
-local nMordecaiId
+local nMordechaiId
 
 local airlock1Warn, airlock2Warn
 
@@ -102,19 +103,19 @@ function mod:OnUnitCreated(nId, tUnit, sName)
     if sName == self.L["Mordechai Redmoon"] then
         core:AddUnit(tUnit)
         core:WatchUnit(tUnit)
-        nMordecaiId = nId
+        nMordechaiId = nId
 		
-		local Offset = 10.5
-		local Angle = 12
-		local OffsetAngle = 90
+		local Offset = 5.5
+		local Angle = 16
+		local OffsetAngle = 0
 		local Length = 25
 		
 		-- cleave lines
-		core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, OffsetAngle)
-		core:AddSimpleLine("Back Right Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
+		-- core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset, Length, -Angle, 8, "white", nil, OffsetAngle)
+		--core:AddSimpleLine("Back Right Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
 		
-		core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, -OffsetAngle)
-		core:AddSimpleLine("Back Left Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, -OffsetAngle)
+		--core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, -OffsetAngle)
+		--Wcore:AddSimpleLine("Back Left Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, -OffsetAngle)
     elseif sName == self.L["Kinetic Orb"] then
         mod:AddTimerBar("ORBSPAWN", "Next Orb", 25, mod:GetSetting("OrbCountdown"))
         core:AddUnit(tUnit)
@@ -151,7 +152,7 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 		core:AddPicture("orb crosshair" .. tostring(nId), nId, "Crosshair", 30, 0, 0, 0, "red")
 
         if tUnit == player then
-            mod:AddMsg("SHOOTORB", self.L["Shoot the orb!"], 5, mod:GetSetting("OrbWarningSounds") and "Destruction")
+            mod:AddMsg("SHOOTORB", self.L["Shoot the orb!"], 5, mod:GetSetting("OrbWarningSounds") and "Beware")
             if mod:GetSetting("OrbLines") then
                 core:AddLineBetweenUnits("ORB" .. nId, player:GetId(), nOrbId, 5, "Green")
             end
@@ -161,8 +162,6 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 		core:AddPicture("shuriken debuff" .. tostring(nId), nId, "Crosshair", 30, 0, 0, 0, "white")
 		if tUnit == player then
             mod:AddMsg("SHURIKEN", "MOVE TO THE RIGHT", 5, mod:GetSetting("OrbWarningSounds") and "Destruction")
-        else
-			mod:AddMsg("SHURIKEN", "MOVE TO THE LEFT" , 5, mod:GetSetting("OrbWarningSounds") and "Destruction")
 		end
     end
 end
@@ -173,6 +172,15 @@ function mod:OnDebuffRemove(nId, nSpellId)
 	elseif DEBUFF__SHOCKING_ATTRACTION == nSpellId then
 		core:RemovePicture("shuriken debuff" .. tostring(nId))
     end
+end
+
+function mod:OnBuffRemove(nId, nSpellId)
+	if nId == nMordechaiId then
+		if nSpellId == DEBUFF__MOO then
+			mod:AddTimerBar("ORBSPAWN", "Next Orb", 15, mod:GetSetting("OrbCountdown")) --15 seconds to orb after airlock MoO ends
+			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 9, mod:GetSetting("OrbCountdown")) -- 9 seconds to shuriken after airlock MoO ends
+		end
+	end
 end
 
 function mod:OnDatachron(sMessage)
