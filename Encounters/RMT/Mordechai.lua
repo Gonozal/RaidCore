@@ -45,6 +45,7 @@ local DEBUFF__ANCHOR_LOCKDOWN = 85601 -- ?
 local DEBUFF__DECOMPRESSION = 75340 -- ?
 local DEBUFF__ENDORPHIN_RUSH = 35023 -- ?
 local DEBUFF__SHATTER_SHOCK = 86755 --Star stun?
+local DEBUFF__SHOCKING_ATTRACTION = 86861 -- Shuriken-Link
 
 
 ----------------------------------------------------------------------------------------------------
@@ -60,12 +61,9 @@ local airlock1Warn, airlock2Warn
 -- Encounter description.
 ----------------------------------------------------------------------------------------------------
 function mod:OnBossEnable()
-    mod:AddTimerBar("ORBSPAWN", "Orb Spawn", 25, mod:GetSetting("OrbCountdown"))
+    mod:AddTimerBar("ORBSPAWN", "Next Orb", 25, mod:GetSetting("OrbCountdown"))
     airlock1Warn = false
     airlock2Warn = false
-end
-
-function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
 end
 
 function mod:OnHealthChanged(nId, nPercent, sName)
@@ -84,6 +82,7 @@ function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if self.L["Mordechai Redmoon"] == sName then
         if self.L["Shatter Shock"] == sCastName then
             mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
+			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 21, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
         end
     end
 end
@@ -91,7 +90,8 @@ end
 function mod:OnCastEnd(nId, sCastName, nCastEndTime, sName)
     if self.L["Mordechai Redmoon"] == sName then
         if self.L["Moment of Opportunity"] == sCastName then
-            mod:AddTimerBar("ORBSPAWN", "Orb Spawn", 15, mod:GetSetting("OrbCountdown")) --15 seconds to orb after airlock MoO ends
+            mod:AddTimerBar("ORBSPAWN", "Next Orb", 15, mod:GetSetting("OrbCountdown")) --15 seconds to orb after airlock MoO ends
+            mod:AddTimerBar("SHURIKEN", "Next Shuriken", 9, mod:GetSetting("OrbCountdown")) -- 9 seconds to shuriken after airlock MoO ends
         end
     end
 end
@@ -103,8 +103,20 @@ function mod:OnUnitCreated(nId, tUnit, sName)
         core:AddUnit(tUnit)
         core:WatchUnit(tUnit)
         nMordecaiId = nId
+		
+		local Offset = 10.5
+		local Angle = 12
+		local OffsetAngle = 90
+		local Length = 25
+		
+		-- cleave lines
+		core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, OffsetAngle)
+		core:AddSimpleLine("Back Right Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
+		
+		core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, -OffsetAngle)
+		core:AddSimpleLine("Back Left Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, -OffsetAngle)
     elseif sName == self.L["Kinetic Orb"] then
-        mod:AddTimerBar("ORBSPAWN", "Orb Spawn", 25, mod:GetSetting("OrbCountdown"))
+        mod:AddTimerBar("ORBSPAWN", "Next Orb", 25, mod:GetSetting("OrbCountdown"))
         core:AddUnit(tUnit)
     elseif sName == self.L["Airlock Anchor"] then
         if mod:GetSetting("AnchorLines") then
@@ -135,13 +147,31 @@ function mod:OnDebuffAdd(nId, nSpellId, nStack, fTimeRemaining)
             end
         end
     elseif DEBUFF__KINETIC_LINK == nSpellId then
-		Print("Kinetic Link on ".. tUnit:GetName())
+		-- Print("Kinetic Link on ".. tUnit:GetName())
+		core:AddPicture("orb crosshair" .. tostring(nId), nId, "Crosshair", 30, 0, 0, 0, "red")
+
         if tUnit == player then
             mod:AddMsg("SHOOTORB", self.L["Shoot the orb!"], 5, mod:GetSetting("OrbWarningSounds") and "Destruction")
             if mod:GetSetting("OrbLines") then
                 core:AddLineBetweenUnits("ORB" .. nId, player:GetId(), nOrbId, 5, "Green")
             end
         end
+		
+	elseif DEBUFF__SHOCKING_ATTRACTION == nSpellId then
+		core:AddPicture("shuriken debuff" .. tostring(nId), nId, "Crosshair", 30, 0, 0, 0, "white")
+		if tUnit == player then
+            mod:AddMsg("SHURIKEN", "MOVE TO THE RIGHT", 5, mod:GetSetting("OrbWarningSounds") and "Destruction")
+        else
+			mod:AddMsg("SHURIKEN", "MOVE TO THE LEFT" , 5, mod:GetSetting("OrbWarningSounds") and "Destruction")
+		end
+    end
+end
+
+function mod:OnDebuffRemove(nId, nSpellId)
+	if DEBUFF__KINETIC_LINK == nSpellId then
+		core:RemovePicture("orb crosshair" .. tostring(nId))
+	elseif DEBUFF__SHOCKING_ATTRACTION == nSpellId then
+		core:RemovePicture("shuriken debuff" .. tostring(nId))
     end
 end
 

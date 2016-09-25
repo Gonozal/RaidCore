@@ -379,7 +379,7 @@ function SimpleLine:UpdateDraw(tDraw)
     UpdateLine(tDraw, tVectorFrom, tVectorTo)
 end
 
-function SimpleLine:AddDraw(Key, Origin, nOffset, nLength, nRotation, nWidth, sColor, nNumberOfDot)
+function SimpleLine:AddDraw(Key, Origin, nOffset, nLength, nRotation, nWidth, sColor, nNumberOfDot, nOffsetRotation)
     local OriginType = type(Origin)
     assert(OriginType == "number" or OriginType == "table" or OriginType == "userdata")
 
@@ -401,15 +401,29 @@ function SimpleLine:AddDraw(Key, Origin, nOffset, nLength, nRotation, nWidth, sC
     tDraw.sColor = sColor or tDraw.sColor
     tDraw.nNumberOfDot = nNumberOfDot or DOT_IS_A_LINE
     tDraw.nPixieIdDot = tDraw.nPixieIdDot or {}
+	tDraw.nOffsetRotation = nOffsetRotation
     -- Preprocessing.
-    local nRad = math.rad(nRotation or 0)
-    local nCos = math.cos(nRad)
-    local nSin = math.sin(nRad)
-    tDraw.RotationMatrix = {
-        x = NewVector3({ nCos, 0, -nSin }),
-        y = NewVector3({ 0, 1, 0 }),
-        z = NewVector3({ nSin, 0, nCos }),
-    }
+    
+	if nOffsetRotation then
+		local nRad = math.rad((nRotation or 0) + nOffsetRotation)
+		local nCos = math.cos(nRad)
+		local nSin = math.sin(nRad)
+		tDraw.ORotationMatrix = {
+			x = NewVector3({ nCos, 0, -nSin }),
+			y = NewVector3({ 0, 1, 0 }),
+			z = NewVector3({ nSin, 0, nCos }),
+		}
+	else
+		local nRad = math.rad(nRotation or 0)
+		local nCos = math.cos(nRad)
+		local nSin = math.sin(nRad)
+		tDraw.RotationMatrix = {
+			x = NewVector3({ nCos, 0, -nSin }),
+			y = NewVector3({ 0, 1, 0 }),
+			z = NewVector3({ nSin, 0, nCos }),
+		}
+	end
+	
     if OriginType == "number" then
         -- Origin is the Id of an unit.
         tDraw.nOriginId = Origin

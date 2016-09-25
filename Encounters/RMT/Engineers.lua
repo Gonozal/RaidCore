@@ -144,6 +144,17 @@ function mod:OnHealthChanged(nId, nPercent, sName)
                 core:RemoveLineBetweenUnits(nId)
             end
 			
+			local sumHealthPercent = 0
+			local healthPercent = 0
+			local uPillar
+			for k in pairs(tPillars) do
+				uPillar = GameLib.GetUnitById(tPillars[k][id])
+				healthPercent = uPillar:GetHealth() / uPillar:GetHealthCeiling()
+				sumHealthPercent = sumHealthPercent + healthPercent*100
+			end
+			-- mod:AddMsg("pillars", "Combined health at ".. tostring(sumHealthPercent), 2, false)
+
+			
 			if distanceToPlayer < 55 then
 				core:SetWorldMarker(sName .. "hptext", nPercent, GameLib.GetUnitById(nId):GetPosition())
 				if nPercent < lastPillarHealth and nPercent < 20 and not disablePillarWarning then
@@ -171,14 +182,18 @@ end
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if sCastName == self.L["Electroshock"] and self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tOrvulgh) < 60 then
 		mod:AddTimerBar("Electroshock", "Electroshock", 20 , true, { sColor = "blue" })
-		Print("Electroshock Warning in 17s")
-		electroshockTimer = ApolloTimer.Create(17, true, "electroshockLines", mod)
 	end
 end
 
 function mod:onCastEnd(nId, sCastName, isInterrupted, sName)
     if sCastName == self.L["Electroshock"] then
 		mod:removeElectroshockLines()
+		if electroshockTimer then
+			electroshockTimer:Stop()
+		end
+		electroshockTimer = nil
+		mod:removeElectroshockLines()
+		electroshockTimer = ApolloTimer.Create(14, true, "electroshockLines", mod)
 	end
 end
 
