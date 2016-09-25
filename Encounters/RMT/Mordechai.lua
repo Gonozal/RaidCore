@@ -46,7 +46,7 @@ local DEBUFF__DECOMPRESSION = 75340 -- ?
 local DEBUFF__ENDORPHIN_RUSH = 35023 -- ?
 local DEBUFF__SHATTER_SHOCK = 86755 --Star stun?
 local DEBUFF__SHOCKING_ATTRACTION = 86861 -- Shuriken-Link
-local DEBUFF__MOO = 275391 -- MoO
+local DEBUFF__MOO = 85559 -- MoO
 
 
 ----------------------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if self.L["Mordechai Redmoon"] == sName then
         if self.L["Shatter Shock"] == sCastName then
             mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
-			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 21, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
+			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 23, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
         end
     end
 end
@@ -105,13 +105,17 @@ function mod:OnUnitCreated(nId, tUnit, sName)
         core:WatchUnit(tUnit)
         nMordechaiId = nId
 		
-		local Offset = 5.5
-		local Angle = 16
-		local OffsetAngle = 0
-		local Length = 25
+		local Offset = 3
+		local Angle = 24
+		local OffsetAngle = 90
+		local Length = 30
 		
 		-- cleave lines
-		-- core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset, Length, -Angle, 8, "white", nil, OffsetAngle)
+		core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, OffsetAngle)
+		core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, -Angle, 8, "white", nil, -OffsetAngle)
+		
+		core:AddSimpleLine("Back Right Cleave", nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
+		core:AddSimpleLine("Back Left Cleave", nMordechaiId, Offset, Length, 180 + Angle, 8, "white", nil, -OffsetAngle)
 		--core:AddSimpleLine("Back Right Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
 		
 		--core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, -OffsetAngle)

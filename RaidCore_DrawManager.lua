@@ -364,14 +364,14 @@ function SimpleLine:UpdateDraw(tDraw)
         if tOriginUnit and tOriginUnit:IsValid() then
             local tOriginVector = NewVector3(tOriginUnit:GetPosition())
             local tFacingVector = NewVector3(tOriginUnit:GetFacing())
-            local tVectorA = tFacingVector * (tDraw.nOffset)
-            local tVectorB = tFacingVector * (tDraw.nLength + tDraw.nOffset)
+            local tVectorA = tFacingVector * (tDraw.nLength)
+            local tVectorB = tFacingVector * (tDraw.nOffset)
             tVectorA = Rotation(tVectorA, tDraw.RotationMatrix)
             --tVectorB = Rotation(tVectorB, tDraw.RotationMatrix)
 			tVectorB = Rotation(tVectorB, tDraw.ORotationMatrix or tDraw.RotationMatrix)
 
-            tVectorFrom = tOriginVector + tVectorA
-            tVectorTo = tOriginVector + tVectorB
+            tVectorFrom = tOriginVector + tVectorB
+            tVectorTo = tOriginVector + tVectorB + tVectorA
         end
     else
         tVectorTo = tDraw.tToVector
