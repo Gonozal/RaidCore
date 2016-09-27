@@ -56,7 +56,7 @@ local DEBUFF__MOO = 85559 -- MoO
 local bWave1Spawned, bWave2Spawned, bWave3Spawned, bMiniSpawned
 
 local nMordechaiId
-
+local phase = 1
 local airlock1Warn, airlock2Warn
 
 ----------------------------------------------------------------------------------------------------
@@ -83,8 +83,8 @@ end
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if self.L["Mordechai Redmoon"] == sName then
         if self.L["Shatter Shock"] == sCastName then
-            mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
-			--mod:AddTimerBar("SHURIKEN", "Next Shuriken", 23, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
+            -- mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
+			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 21, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
         end
     end
 end
@@ -124,7 +124,7 @@ function mod:OnUnitCreated(nId, tUnit, sName)
 		--core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, -OffsetAngle)
 		--Wcore:AddSimpleLine("Back Left Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, -OffsetAngle)
     elseif sName == self.L["Kinetic Orb"] then
-        mod:AddTimerBar("ORBSPAWN", "Next Orb", 23, mod:GetSetting("OrbCountdown"))
+        mod:AddTimerBar("ORBSPAWN", "Next Orb", 25, mod:GetSetting("OrbCountdown"))
         core:AddUnit(tUnit)
     elseif sName == self.L["Airlock Anchor"] then
         if mod:GetSetting("AnchorLines") then
@@ -184,8 +184,12 @@ end
 function mod:OnBuffRemove(nId, nSpellId)
 	if nId == nMordechaiId then
 		if nSpellId == DEBUFF__MOO then
+			phase = phase + 1
 			mod:AddTimerBar("ORBSPAWN", "Next Orb", 15, mod:GetSetting("OrbCountdown")) --15 seconds to orb after airlock MoO ends
 			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 9, mod:GetSetting("OrbCountdown")) -- 9 seconds to shuriken after airlock MoO ends
+			if phase == 3 then
+				mod:AddTimerBar("BARRAGE", "Vicious Barrage", 32) --32 seconds to Barrage after 2nd airlock MoO ends
+			end
 		end
 	end
 end
