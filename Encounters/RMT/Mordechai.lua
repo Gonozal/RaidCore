@@ -72,10 +72,10 @@ function mod:OnHealthChanged(nId, nPercent, sName)
     if sName == self.L["Mordechai Redmoon"] then
         if nPercent >= 85 and nPercent <= 87 and not airlock1Warn then
             airlock1Warn = true
-            mod:AddMsg("AIRLOCKWARN", self.L["Airlock soon!"], 5, mod:GetSetting("AirlockWarningSound") and "Algalon")
+           -- mod:AddMsg("AIRLOCKWARN", self.L["Airlock soon!"], 5, mod:GetSetting("AirlockWarningSound") and "Algalon")
         elseif nPercent >= 60 and nPercent <= 62 and not airlock2Warn then
             airlock2Warn = true
-            mod:AddMsg("AIRLOCKWARN", self.L["Airlock soon!"], 5, mod:GetSetting("AirlockWarningSound") and "Algalon")
+            --mod:AddMsg("AIRLOCKWARN", self.L["Airlock soon!"], 5, mod:GetSetting("AirlockWarningSound") and "Algalon")
         end
     end
 end
@@ -84,7 +84,7 @@ function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if self.L["Mordechai Redmoon"] == sName then
         if self.L["Shatter Shock"] == sCastName then
             mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
-			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 23, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
+			--mod:AddTimerBar("SHURIKEN", "Next Shuriken", 23, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
         end
     end
 end
@@ -124,7 +124,7 @@ function mod:OnUnitCreated(nId, tUnit, sName)
 		--core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, -OffsetAngle)
 		--Wcore:AddSimpleLine("Back Left Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, -OffsetAngle)
     elseif sName == self.L["Kinetic Orb"] then
-        mod:AddTimerBar("ORBSPAWN", "Next Orb", 25, mod:GetSetting("OrbCountdown"))
+        mod:AddTimerBar("ORBSPAWN", "Next Orb", 23, mod:GetSetting("OrbCountdown"))
         core:AddUnit(tUnit)
     elseif sName == self.L["Airlock Anchor"] then
         if mod:GetSetting("AnchorLines") then
