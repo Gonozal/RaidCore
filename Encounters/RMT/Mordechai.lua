@@ -111,14 +111,28 @@ function mod:OnUnitCreated(nId, tUnit, sName)
 		local OffsetAngle = 90
 		local Length = 30
 		
+		local Angle1 = 32.65
+		local Offset1 = 5.08
+		
 		
 		-- cleave lines
 		if mod:GetSetting("TelegraphLines") then
-			core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, OffsetAngle)
-			core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, -Angle, 8, "white", nil, -OffsetAngle)
+			core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset1, Length, Angle, 8, "white", nil, (OffsetAngle - Angle1))
+			core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset1, Length, -Angle, 8, "white", nil, -(OffsetAngle - Angle1))
 			
-			core:AddSimpleLine("Back Right Cleave", nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
-			core:AddSimpleLine("Back Left Cleave", nMordechaiId, Offset, Length, 180 + Angle, 8, "white", nil, -OffsetAngle)
+			core:AddSimpleLine("Back Right Cleave", nMordechaiId, Offset1, Length, 180 - Angle, 8, "white", nil, (OffsetAngle + Angle1))
+			core:AddSimpleLine("Back Left Cleave", nMordechaiId, Offset1, Length, 180 + Angle, 8, "white", nil, -(OffsetAngle + Angle1))
+			
+			core:AddSimpleLine("Front Right Middle Cleave", nMordechaiId, Offset+2.5, 3, -Angle, 8, "white", nil, OffsetAngle)
+			core:AddSimpleLine("Front Left Middle Cleave", nMordechaiId, Offset+2.5, 3, Angle, 8, "white", nil, -OffsetAngle)
+			
+			core:AddSimpleLine("Back Right Middle Cleave", nMordechaiId, Offset+2.5, 3, 180 + Angle, 8, "white", nil, OffsetAngle)
+			core:AddSimpleLine("Back Left Middle Cleave", nMordechaiId, Offset+2.5, 3, 180 - Angle, 8, "white", nil, -OffsetAngle)
+			
+			--core:AddSimpleLine("Circle Left Cleave", nMordechaiId, Offset+2, 3, 180 - Angle, 8, "white", nil, -OffsetAngle)
+			--core:AddSimpleLine("Circle Left Cleave", nMordechaiId, Offset+2, 3, Angle, 8, "white", nil, -OffsetAngle)
+			--core:AddSimpleLine("Circle Right Cleave", nMordechaiId, Offset+2, 3, 180 + Angle, 8, "white", nil, OffsetAngle)
+			--core:AddSimpleLine("Circle Right Cleave", nMordechaiId, Offset+2, 3, - Angle, 8, "white", nil, OffsetAngle)
 			--core:AddSimpleLine("Back Right Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
 		end	
 		--core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, -OffsetAngle)
