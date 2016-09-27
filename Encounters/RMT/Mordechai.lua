@@ -30,6 +30,7 @@ mod:RegisterEnglishLocale({
 
 mod:RegisterDefaultSetting("OrbLines")
 mod:RegisterDefaultSetting("AnchorLines")
+mod:RegisterDefaultSetting("TelegraphLines")
 mod:RegisterDefaultSetting("OrbWarningSounds")
 mod:RegisterDefaultSetting("OrbCountdown")
 mod:RegisterDefaultSetting("StarsWarning")
@@ -110,14 +111,16 @@ function mod:OnUnitCreated(nId, tUnit, sName)
 		local OffsetAngle = 90
 		local Length = 30
 		
+		
 		-- cleave lines
-		core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, OffsetAngle)
-		core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, -Angle, 8, "white", nil, -OffsetAngle)
-		
-		core:AddSimpleLine("Back Right Cleave", nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
-		core:AddSimpleLine("Back Left Cleave", nMordechaiId, Offset, Length, 180 + Angle, 8, "white", nil, -OffsetAngle)
-		--core:AddSimpleLine("Back Right Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
-		
+		if mod:GetSetting("TelegraphLines") then
+			core:AddSimpleLine("Front Right Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, OffsetAngle)
+			core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, -Angle, 8, "white", nil, -OffsetAngle)
+			
+			core:AddSimpleLine("Back Right Cleave", nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
+			core:AddSimpleLine("Back Left Cleave", nMordechaiId, Offset, Length, 180 + Angle, 8, "white", nil, -OffsetAngle)
+			--core:AddSimpleLine("Back Right Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, OffsetAngle)
+		end	
 		--core:AddSimpleLine("Front Left Cleave", nMordechaiId, Offset, Length, Angle, 8, "white", nil, -OffsetAngle)
 		--Wcore:AddSimpleLine("Back Left Cleave",  nMordechaiId, Offset, Length, 180 - Angle, 8, "white", nil, -OffsetAngle)
     elseif sName == self.L["Kinetic Orb"] then
