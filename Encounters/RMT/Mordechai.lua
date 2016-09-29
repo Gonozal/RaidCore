@@ -66,6 +66,9 @@ function mod:OnBossEnable()
     mod:AddTimerBar("ORBSPAWN", "Next Orb", 25, mod:GetSetting("OrbCountdown"))
     airlock1Warn = false
     airlock2Warn = false
+	local stackPointPos = Vector3.New(109, 353, 175)
+	core:AddPicture("StackStars", stackPointPos, "Crosshair", 100, nil, nil, nil, "red")
+	core:SetWorldMarker("StackStarsText", "STACK HERE", stackPointPos)
 end
 
 function mod:OnHealthChanged(nId, nPercent, sName)
