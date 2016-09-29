@@ -56,7 +56,7 @@ local DEBUFF__MOO = 85559 -- MoO
 local bWave1Spawned, bWave2Spawned, bWave3Spawned, bMiniSpawned
 
 local nMordechaiId
-local phase = 1
+local phase
 local airlock1Warn, airlock2Warn
 
 ----------------------------------------------------------------------------------------------------
@@ -81,10 +81,15 @@ function mod:OnHealthChanged(nId, nPercent, sName)
 end
 
 function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
+	phase = 1
     if self.L["Mordechai Redmoon"] == sName then
         if self.L["Shatter Shock"] == sCastName then
             -- mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
 			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 21, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
+        end
+		if "Vicious Barrage" == sCastName then
+            -- mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
+			mod:AddTimerBar("BARRAGE", "Vicious Barrage", 42) -- 45 seconds between shuriken casts
         end
     end
 end
@@ -201,7 +206,7 @@ function mod:OnBuffRemove(nId, nSpellId)
 			phase = phase + 1
 			mod:AddTimerBar("ORBSPAWN", "Next Orb", 15, mod:GetSetting("OrbCountdown")) --15 seconds to orb after airlock MoO ends
 			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 9, mod:GetSetting("OrbCountdown")) -- 9 seconds to shuriken after airlock MoO ends
-			if phase == 3 then
+			if phase >= 3 then
 				mod:AddTimerBar("BARRAGE", "Vicious Barrage", 32) --32 seconds to Barrage after 2nd airlock MoO ends
 			end
 		end
