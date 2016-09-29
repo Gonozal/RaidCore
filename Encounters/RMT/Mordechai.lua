@@ -34,6 +34,7 @@ mod:RegisterDefaultSetting("TelegraphLines")
 mod:RegisterDefaultSetting("OrbWarningSounds")
 mod:RegisterDefaultSetting("OrbCountdown")
 mod:RegisterDefaultSetting("StarsWarning")
+mod:RegisterDefaultSetting("StarsCountdown")
 mod:RegisterDefaultSetting("AirlockWarningSound")
 
 ----------------------------------------------------------------------------------------------------
@@ -88,7 +89,7 @@ function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     if self.L["Mordechai Redmoon"] == sName then
         if self.L["Shatter Shock"] == sCastName then
             -- mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
-			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 21, mod:GetSetting("OrbCountdown")) --21 seconds between shuriken casts
+			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 21, mod:GetSetting("StarsCountdown")) --21 seconds between shuriken casts
         end
 		if "Vicious Barrage" == sCastName then
             -- mod:AddMsg("SHATTERSHOCK", "Stars Icoming!", 5, mod:GetSetting("StarsWarning") and "Beware")
@@ -97,11 +98,12 @@ function mod:OnCastStart(nId, sCastName, nCastEndTime, sName)
     end
 end
 
+
 function mod:OnCastEnd(nId, sCastName, nCastEndTime, sName)
     if self.L["Mordechai Redmoon"] == sName then
         if self.L["Moment of Opportunity"] == sCastName then
             mod:AddTimerBar("ORBSPAWN", "Next Orb", 15, mod:GetSetting("OrbCountdown")) --15 seconds to orb after airlock MoO ends
-            mod:AddTimerBar("SHURIKEN", "Next Shuriken", 9, mod:GetSetting("OrbCountdown")) -- 9 seconds to shuriken after airlock MoO ends
+            mod:AddTimerBar("SHURIKEN", "Next Shuriken", 9, mod:GetSetting("StarsCountdown")) -- 9 seconds to shuriken after airlock MoO ends
         end
     end
 end
@@ -208,7 +210,7 @@ function mod:OnBuffRemove(nId, nSpellId)
 		if nSpellId == DEBUFF__MOO then
 			phase = phase + 1
 			mod:AddTimerBar("ORBSPAWN", "Next Orb", 15, mod:GetSetting("OrbCountdown")) --15 seconds to orb after airlock MoO ends
-			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 9, mod:GetSetting("OrbCountdown")) -- 9 seconds to shuriken after airlock MoO ends
+			mod:AddTimerBar("SHURIKEN", "Next Shuriken", 9, mod:GetSetting("StarsCountdown")) -- 9 seconds to shuriken after airlock MoO ends
 			if phase >= 3 then
 				mod:AddTimerBar("BARRAGE", "Vicious Barrage", 32) --32 seconds to Barrage after 2nd airlock MoO ends
 			end
