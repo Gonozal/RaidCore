@@ -127,13 +127,16 @@ end
 
 function mod:OnHealthChanged(nId, nPercent, sName)
 	local tUnit = GameLib.GetUnitById(nId)
-	local distanceToPlayer = self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tUnit)
  
 
     if sName == self.L["Fusion Core"] or
         sName == self.L["Cooling Turbine"] or
         sName == self.L["Spark Plug"] or
         sName == self.L["Lubricant Nozzle"] then
+			local distanceToPlayer = self:GetDistanceBetweenUnits(GameLib.GetPlayerUnit(), tUnit)
+			
+			
+			
             if nPercent >= 85 and not tPillars[sName].warning then
                 local player = GameLib.GetPlayerUnit()
                 tPillars[sName].warning = true
@@ -148,14 +151,16 @@ function mod:OnHealthChanged(nId, nPercent, sName)
 			local healthPercent = 0
 			local uPillar
 			for k in pairs(tPillars) do
-				uPillar = GameLib.GetUnitById(tPillars[k][id])
-				healthPercent = uPillar:GetHealth() / uPillar:GetHealthCeiling()
-				sumHealthPercent = sumHealthPercent + healthPercent*100
+				--uPillar = GameLib.GetUnitById(tPillars[k]["id"])
+				--healthPercent = uPillar:GetHealth() / uPillar:GetHealthCeiling()
+				--sumHealthPercent = sumHealthPercent + healthPercent*100
 			end
 			-- mod:AddMsg("pillars", "Combined health at ".. tostring(sumHealthPercent), 2, false)
-
-			
+			--Print(tostring(distanceToPlayer))
+			--Print("Pillar Health Change")
+			--Print(sName)
 			if distanceToPlayer < 55 then
+				
 				core:SetWorldMarker(sName .. "hptext", nPercent, GameLib.GetUnitById(nId):GetPosition())
 				if nPercent < lastPillarHealth and nPercent < 20 and not disablePillarWarning then
 					mod:AddMsg("PILLAR", "Watch Pillar Health", 5, "Beware")
