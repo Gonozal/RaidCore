@@ -172,8 +172,9 @@ function mod:OnUnitCreated(nId, tUnit, sName)
         --core:WatchUnit(tUnit)
     elseif sName == self.L["Astral Shard"] then
 		local shardPos = tUnit:GetPosition()
+		local size = 2 - ((shardPos.y - ROOM_FLOOR_Y) / 40)
 		shardPos.y = ROOM_FLOOR_Y
-		core:AddPolygon(nId, Vector3.New(shardPos), 2, 0, 3, "red", 20)
+		core:AddPolygon(nId, Vector3.New(shardPos), size, 0, 3, "red", 20)
         -- if mod:GetSetting("ShardLines") then
         --     if not tShardTimer then
         --         tShardTimer = ApolloTimer.Create(.1, true, "CheckShardsTimer", self)
