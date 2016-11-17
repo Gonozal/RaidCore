@@ -171,19 +171,24 @@ function mod:OnUnitCreated(nId, tUnit, sName)
         --core:AddUnit(tUnit)
         --core:WatchUnit(tUnit)
     elseif sName == self.L["Astral Shard"] then
-        if mod:GetSetting("ShardLines") then
-            if not tShardTimer then
-                tShardTimer = ApolloTimer.Create(.1, true, "CheckShardsTimer", self)
-            end
-            tShardIds[nId] = false;
-        end
+		local shardPos = tUnit:GetPosition()
+		shardPos.y = ROOM_FLOOR_Y
+		core:AddPolygon(nId, Vector3.New(shardPos), 2, 0, 3, "red", 20)
+        -- if mod:GetSetting("ShardLines") then
+        --     if not tShardTimer then
+        --         tShardTimer = ApolloTimer.Create(.1, true, "CheckShardsTimer", self)
+        --     end
+        --     tShardIds[nId] = false;
+        -- end
     end
 end
 
 function mod:OnUnitDestroyed(nId, tUnit, sName)
     if sName == self.L["Astral Shard"] then
-       tShardIds[nId] = nil;
-       core:RemoveLineBetweenUnits(nId)
+		--core:AddPolygon(nId, circleLeft, 2, 0, 3, "red", 20)
+		core:RemovePolygon(nId)
+        tShardIds[nId] = nil;
+        core:RemoveLineBetweenUnits(nId)
     end
 end
 
